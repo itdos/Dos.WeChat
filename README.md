@@ -1,4 +1,4 @@
-# Dos.ORM
+# Dos.WeChat
 <h4>
     Dos.WeChat 微信开发组件：
 </h4>
