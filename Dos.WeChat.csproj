@@ -58,7 +58,7 @@
   <ItemGroup>
     <Compile Include="Common\ApiList.cs" />
     <Compile Include="Common\AttributeHelper.cs" />
-    <Compile Include="Common\LogHelper.cs" />
+    <Compile Include="Common\UserParam.cs" />
     <Compile Include="Common\WeChatResult.cs" />
     <Compile Include="Base\Token.cs" />
     <Compile Include="Base\JoinToken.cs" />

@@ -70,5 +70,9 @@ namespace Dos.WeChat.Common
         /// 
         /// </summary>
         public static string UnifiedOrderUrl = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+        /// <summary>
+        /// 
+        /// </summary>
+        public static string GetOauth2AccessTokenUrl = "https://api.weixin.qq.com/sns/oauth2/access_token";
     }
 }

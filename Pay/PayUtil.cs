@@ -276,7 +276,7 @@ namespace Dos.WeChat
         /// <param name="param"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public string GetUnifiedOrder(PayParam param, HttpContextBase context)
+        public string GetUnifiedOrder(PayParam param = null, HttpContextBase context = null)
         {
             if (param.TotalFee == null || string.IsNullOrWhiteSpace(param.ProductName) || string.IsNullOrWhiteSpace(param.OrderNumber) || string.IsNullOrWhiteSpace(param.TimeExpire) || param.TradeType == null)
             {
@@ -305,7 +305,9 @@ namespace Dos.WeChat
             var reqXml = req.ParseXml();
             //LogHelper.WriteLog("aa_", "reqXml的值是：" + reqXml);
             var http = new HttpUtil();
-            http.SetCharset(context.Request.ContentEncoding.BodyName);
+            http.SetCharset(context == null
+                ? HttpContext.Current.Request.ContentEncoding.BodyName
+                : context.Request.ContentEncoding.BodyName);
             var result = http.Send(reqXml, ApiList.UnifiedOrderUrl);
             return result;
         }
@@ -313,7 +315,7 @@ namespace Dos.WeChat
         /// 传入 OpenId,订单Id，金额（分），过期时间（20141010121314），商品名称。
         /// </summary>
         /// <returns></returns>
-        public string CreateJSAPIPayJson(PayParam param, HttpContextBase context)
+        public string CreateJSAPIPayJson(PayParam param, HttpContextBase context = null)
         {
             if (param.TotalFee == null || string.IsNullOrWhiteSpace(param.ProductName) || string.IsNullOrWhiteSpace(param.OrderNumber) || string.IsNullOrWhiteSpace(param.OpenId) || string.IsNullOrWhiteSpace(param.TimeExpire))
             {

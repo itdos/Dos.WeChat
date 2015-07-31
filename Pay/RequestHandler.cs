@@ -41,13 +41,19 @@ namespace Dos.WeChat
         public RequestHandler(HttpContextBase httpContext)
         {
             Parameters = new Hashtable();
-            HttpContext = httpContext;
+            ContextBase = httpContext;
+        }
+        public RequestHandler(HttpContext httpContext)
+        {
+            Parameters = new Hashtable();
+            Context = httpContext;
         }
         /// <summary>
         /// 密钥
         /// </summary>
         private string _key;
-        protected HttpContextBase HttpContext;
+        protected HttpContextBase ContextBase;
+        protected HttpContext Context;
         /// <summary>
         /// 请求的参数
         /// </summary>
@@ -226,7 +232,18 @@ namespace Dos.WeChat
         {
             try
             {
-                return HttpContext.Request.ContentEncoding.BodyName;
+                if (ContextBase != null)
+                {
+                    return ContextBase.Request.ContentEncoding.BodyName;
+                }
+                else if (Context != null)
+                {
+                    return Context.Request.ContentEncoding.BodyName;
+                }
+                else
+                {
+                    return HttpContext.Current.Request.ContentEncoding.BodyName;
+                }
             }
             catch (Exception)
             {

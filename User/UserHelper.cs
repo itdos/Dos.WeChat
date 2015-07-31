@@ -46,11 +46,26 @@ namespace Dos.WeChat
         {
             var result = HttpHelper.Get<UserInfoModel>(ApiList.GetUserInfo, new HttpParam()
             {
-                { "access_token", param.AccessToken }, 
+                { "access_token", Token.GetAccessToken(param) }, 
                 { "openid", param.OpenId }, 
                 { "lang", "zh_CN" }
             });
             return result;
+        }
+        /// <summary>
+        /// 传入Code
+        /// </summary>
+        public static Dictionary<string, string> GetOauth2AccessToken(UserParam param)
+        {
+            var param2 = new HttpParam()
+            {
+                {"appid",GetConfig.GetAppid(param)},
+                {"secret", GetConfig.GetSecret(param)},
+                {"code", param.Code},
+                {"grant_type", "authorization_code"}
+            };
+            var dic = HttpHelper.Get<Dictionary<string, string>>(ApiList.GetOauth2AccessTokenUrl, param2);
+            return dic;
         }
     }
 }

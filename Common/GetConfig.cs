@@ -37,53 +37,37 @@ namespace Dos.WeChat
             }
             return WebConfigurationManager.AppSettings["WeChatAppId_" + param.WeChatPublic];
         }
-        public static string GetMchId(WeChatParam param)
+        public static string GetMchId(WeChatParam param = null)
         {
-            if (param.WeChatPublic == EnumHelper.WeChatPublic.Xcz.ToString())
+            if (param == null || string.IsNullOrWhiteSpace(param.WeChatPublic) || param.WeChatPublic == EnumHelper.WeChatPublic.Xcz.ToString())
             {
                 return WebConfigurationManager.AppSettings["WeChatPartnerID"];
             }
-            else if (param.WeChatPublic == EnumHelper.WeChatPublic.XczJl.ToString())
-            {
-                return WebConfigurationManager.AppSettings["WeChatPartnerID_XczJl"];
-            }
-            return WebConfigurationManager.AppSettings["WeChatPartnerID"];
+            return WebConfigurationManager.AppSettings["WeChatPartnerID_" + param.WeChatPublic];
         }
-        public static string GetKey(WeChatParam param)
+        public static string GetKey(WeChatParam param = null)
         {
-            if (param.WeChatPublic == EnumHelper.WeChatPublic.Xcz.ToString())
+            if (param == null || string.IsNullOrWhiteSpace(param.WeChatPublic) || param.WeChatPublic == EnumHelper.WeChatPublic.Xcz.ToString())
             {
                 return WebConfigurationManager.AppSettings["WeChatPartnerKey"];
             }
-            else if (param.WeChatPublic == EnumHelper.WeChatPublic.XczJl.ToString())
-            {
-                return WebConfigurationManager.AppSettings["WeChatPartnerKey_XczJl"];
-            }
-            return WebConfigurationManager.AppSettings["WeChatPartnerKey"];
+            return WebConfigurationManager.AppSettings["WeChatPartnerKey_" + param.WeChatPublic];
         }
-        public static string GetCertPath(WeChatParam param)
+        public static string GetCertPath(WeChatParam param = null)
         {
-            if (param.WeChatPublic == EnumHelper.WeChatPublic.Xcz.ToString())
+            if (param == null || string.IsNullOrWhiteSpace(param.WeChatPublic) || param.WeChatPublic == EnumHelper.WeChatPublic.Xcz.ToString())
             {
                 return WebConfigurationManager.AppSettings["WeChatCertPath"];
             }
-            else if (param.WeChatPublic == EnumHelper.WeChatPublic.XczJl.ToString())
-            {
-                return WebConfigurationManager.AppSettings["WeChatCertPath_XczJl"];
-            }
-            return WebConfigurationManager.AppSettings["WeChatCertPath"];
+            return WebConfigurationManager.AppSettings["WeChatCertPath_" + param.WeChatPublic];
         }
-        public static string GetCertPwd(WeChatParam param)
+        public static string GetCertPwd(WeChatParam param = null)
         {
-            if (param.WeChatPublic == EnumHelper.WeChatPublic.Xcz.ToString())
+            if (param == null || string.IsNullOrWhiteSpace(param.WeChatPublic) || param.WeChatPublic == EnumHelper.WeChatPublic.Xcz.ToString())
             {
                 return WebConfigurationManager.AppSettings["WeChatCertPwd"];
             }
-            else if (param.WeChatPublic == EnumHelper.WeChatPublic.XczJl.ToString())
-            {
-                return WebConfigurationManager.AppSettings["WeChatCertPwd_XczJl"];
-            }
-            return WebConfigurationManager.AppSettings["WeChatCertPwd"];
+            return WebConfigurationManager.AppSettings["WeChatCertPwd_" + param.WeChatPublic];
         }
         /// <summary>
         /// 获取web.config的WeChatSecret
@@ -99,17 +83,14 @@ namespace Dos.WeChat
             }
             return WebConfigurationManager.AppSettings["WeChatSecret_" + param.WeChatPublic];
         }
-        public static string GetNotify(WeChatParam param)
+        public static string GetNotify(WeChatParam param = null)
         {
-            if (param.WeChatPublic == EnumHelper.WeChatPublic.Xcz.ToString())
+            if (param == null || string.IsNullOrWhiteSpace(param.WeChatPublic) ||
+                param.WeChatPublic == EnumHelper.WeChatPublic.Xcz.ToString())
             {
                 return WebConfigurationManager.AppSettings["TenpayNotify"];
             }
-            else if (param.WeChatPublic == EnumHelper.WeChatPublic.XczJl.ToString())
-            {
-                return WebConfigurationManager.AppSettings["TenpayNotify_XczJl"];
-            }
-            return WebConfigurationManager.AppSettings["TenpayNotify"];
+            return WebConfigurationManager.AppSettings["TenpayNotify_" + param.WeChatPublic];
         }
         public static string GetToken(WeChatParam param = null)
         {
