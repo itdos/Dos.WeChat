@@ -22,4 +22,4 @@
 <div>
     <span style="font-size: 12px;">交流QQ群：</span><a href="http://jq.qq.com/?_wv=1027&k=UlJ53g" target="_blank" _href="http://jq.qq.com/?_wv=1027&k=UlJ53g" style="font-size: 12px; "><span style="font-size: 12px;">60831381</span></a>
 </div>
-<img src="http://ITdos.com/Media/Default/upload/image/20150724/6357333271473131271117314.png" title="成功案例" alt="成功案例"/>
+<img src="http://itdos.com/Media/Default/upload/image/20150802/6357412254722288034861261.jpg" title="成功案例" alt="成功案例"/>
