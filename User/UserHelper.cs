@@ -29,7 +29,7 @@ namespace Dos.WeChat
         /// <summary>
         /// 传入OpenId，AccessToken
         /// </summary>
-        public UserInfoModel GetSnsUserInfo(WeChatParam param)
+        public static UserInfoModel GetSnsUserInfo(WeChatParam param)
         {
             var result = HttpHelper.Get<UserInfoModel>(ApiList.SnsUserInfo, new HttpParam()
             {
@@ -42,7 +42,7 @@ namespace Dos.WeChat
         /// <summary>
         /// 传入OpenId，AccessToken
         /// </summary>
-        public UserInfoModel GetUserInfo(WeChatParam param)
+        public static UserInfoModel GetUserInfo(WeChatParam param)
         {
             var result = HttpHelper.Get<UserInfoModel>(ApiList.GetUserInfo, new HttpParam()
             {

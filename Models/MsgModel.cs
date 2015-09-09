@@ -125,7 +125,7 @@ namespace Dos.WeChat
         /// <summary>
         /// 退订事件
         /// </summary>
-        public const string Unsubscribe = "unsubscribe";
+        public const string UnSubscribe = "unsubscribe";
 
         /// <summary>
         /// 菜单点击事件

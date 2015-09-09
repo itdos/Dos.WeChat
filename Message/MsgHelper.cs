@@ -180,13 +180,13 @@ namespace Dos.WeChat
         /// <summary>
         /// 
         /// </summary>
-        public static void Reg(IMsgCall call, HttpContextBase context = null)
+        public static void Reg(IMsgCall call)
         {
             if (_IMsgCall == null)
             {
                 RegIMsgCall(call);
             }
-            ParseReceiveMsg(context).RegMsgCall().Response(true, context);
+            ParseReceiveMsg().RegMsgCall().Response(true);
         }
         /// <summary>
         /// 从xml文件解析消息。
@@ -201,22 +201,12 @@ namespace Dos.WeChat
         /// 
         /// </summary>
         /// <returns></returns>
-        public static ReceiveMsg ParseReceiveMsg(HttpContextBase context = null)
+        public static ReceiveMsg ParseReceiveMsg()
         {
-            if (context == null)
-            {
-                var request = HttpContext.Current.Request;
-                var sr = new StreamReader(request.InputStream);
-                var msg = Parse(sr.ReadToEnd());
-                return msg;
-            }
-            else
-            {
-                var request = context.Request;
-                var sr = new StreamReader(request.InputStream);
-                var msg = Parse(sr.ReadToEnd());
-                return msg;
-            }
+            var request = HttpContext.Current.Request;
+            var sr = new StreamReader(request.InputStream);
+            var msg = Parse(sr.ReadToEnd());
+            return msg;
         }
 
         /// <summary>
@@ -368,32 +358,16 @@ namespace Dos.WeChat
         /// <summary>
         /// 将响应写入响应流。
         /// </summary>
-        public void Response(bool end = true, HttpContextBase context = null)
+        public void Response(bool end = true)
         {
-            if (context == null)
+            var response = HttpContext.Current.Response;
+            if (response.IsClientConnected)
             {
-                var response = HttpContext.Current.Response;
-                if (response.IsClientConnected)
+                response.Write(ToXml());
+                if (end)
                 {
-                    response.Write(ToXml());
-                    if (end)
-                    {
-                        response.Flush();
-                        response.Close();
-                    }
-                }
-            }
-            else
-            {
-                var response = context.Response;
-                if (response.IsClientConnected)
-                {
-                    response.Write(ToXml());
-                    if (end)
-                    {
-                        response.Flush();
-                        response.Close();
-                    }
+                    response.Flush();
+                    response.Close();
                 }
             }
         }

@@ -34,7 +34,7 @@ namespace Dos.WeChat
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public QrResult CreateTempQrCode(CreateQrCode msg)
+        public static QrResult CreateTempQrCode(CreateQrCode msg)
         {
             var result = HttpHelper.Post<QrResult>(ApiList.QrcodeCreateUrl, msg.ToString(), "access_token=" + Token.GetAccessToken(msg));
             return result;
@@ -44,7 +44,7 @@ namespace Dos.WeChat
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public Stream GetTempQrCode(CreateQrCode msg)
+        public static Stream GetTempQrCode(CreateQrCode msg)
         {
             msg.ActionName = EnumHelper.QrCodeType.QR_SCENE.ToString();
             var result = HttpHelper.Post<QrResult>(ApiList.QrcodeCreateUrl, msg.ToString(), "access_token=" + Token.GetAccessToken(msg));
@@ -57,8 +57,9 @@ namespace Dos.WeChat
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public Stream GetEverQrCode(CreateQrCode msg)
+        public static Stream GetEverQrCode(CreateQrCode msg)
         {
+            msg.ActionName = EnumHelper.QrCodeType.QR_LIMIT_STR_SCENE.ToString();
             var result = HttpHelper.Post<QrResult>(ApiList.QrcodeCreateUrl, msg.ToString(),
                 "access_token=" + Token.GetAccessToken(msg));
             var url = ApiList.ShowQrcodeUrl + "?ticket=" + result.Ticket + "&access_token=" + Token.GetAccessToken(msg);

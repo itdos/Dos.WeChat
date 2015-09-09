@@ -21,6 +21,8 @@
 * 备注描述：
 *******************************************************/
 #endregion
+
+using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Web;
@@ -44,22 +46,17 @@ namespace Dos.WeChat
         /// 微信服务器编码方式
         /// </summary>
         private const string Charset = "utf-8";
-        /// <summary>
-        /// 参与签名的参数列表
-        /// </summary>
-        protected HttpContextBase HttpContext;
         //protected Hashtable parameters;
         private Hashtable xmlMap;
 
         //获取页面提交的get和post参数
-        public ResponseHandler(HttpContextBase httpContext)
+        public ResponseHandler()
         {
             xmlMap = new Hashtable();
-            this.HttpContext = httpContext;
-            if (this.HttpContext.Request.InputStream.Length > 0)
+            if (HttpContext.Current.Request.InputStream.Length > 0)
             {
                 var xmlDoc = new XmlDocument();
-                xmlDoc.Load(this.HttpContext.Request.InputStream);
+                xmlDoc.Load(HttpContext.Current.Request.InputStream);
                 var root = xmlDoc.SelectSingleNode("xml");
                 var xnl = root.ChildNodes;
                 foreach (XmlNode xnf in xnl)
@@ -196,8 +193,14 @@ namespace Dos.WeChat
         /// <returns></returns>
         protected virtual string GetCharset()
         {
-            //return "UTF-8";
-            return HttpContext.Request.ContentEncoding.BodyName;
+            try
+            {
+                return HttpContext.Current.Request.ContentEncoding.BodyName;
+            }
+            catch (Exception)
+            {
+                return "UTF-8";
+            }
         }
     }
 }

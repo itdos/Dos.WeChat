@@ -29,7 +29,7 @@ namespace Dos.WeChat
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        public string CreateWxConfig(WeChatParam param)
+        public static string CreateWxConfig(WeChatParam param)
         {
             try
             {

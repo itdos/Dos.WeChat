@@ -43,9 +43,9 @@ namespace Dos.WeChat
         /// <param name="context"></param>
         /// <param name="billDate"></param>
         /// <returns></returns>
-        public BaseResult DownloadBill(HttpContextBase context, string billDate,WeChatParam param)
+        public static BaseResult DownloadBill(string billDate, WeChatParam param)
         {
-            var packageReq = new RequestHandler(context);
+            var packageReq = new RequestHandler();
             packageReq.SetKey(GetConfig.GetKey(param));
             packageReq.SetParameter("appid", GetConfig.GetAppid(param));
             packageReq.SetParameter("mch_id", GetConfig.GetMchId(param));
@@ -55,7 +55,7 @@ namespace Dos.WeChat
             packageReq.SetParameter("sign", packageReq.CreateMd5Sign());
             var reqXml = packageReq.ParseXml();
             var httpClient = new HttpUtil();
-            httpClient.SetCharset(context.Request.ContentEncoding.BodyName);
+            httpClient.SetCharset(HttpContext.Current.Request.ContentEncoding.BodyName);
             var result = httpClient.Send(reqXml, ApiList.DownloadBillUrl);
             try
             {
@@ -114,7 +114,7 @@ namespace Dos.WeChat
         /// <param name="context"></param>
         /// <param name="param"></param>
         /// <returns></returns>
-        public BaseResult Refund(HttpContextBase context, PayParam param)
+        public static BaseResult Refund(PayParam param)
         {
             if (param.TotalFee == null || param.RefundFee == null || string.IsNullOrWhiteSpace(param.OrderNumber) || string.IsNullOrWhiteSpace(param.RefundNumber))
             {
@@ -143,11 +143,12 @@ namespace Dos.WeChat
             #endregion
 
             #region 微信退款
-            var packageReq = new RequestHandler(context);
+            var packageReq = new RequestHandler();
             packageReq.SetKey(GetConfig.GetKey(param));
             packageReq.SetParameter("appid", GetConfig.GetAppid(param));
             packageReq.SetParameter("mch_id", GetConfig.GetMchId(param));
             packageReq.SetParameter("nonce_str", GetNoncestr());
+            //packageReq.SetParameter("transaction_id", "");
             packageReq.SetParameter("out_trade_no", param.OrderNumber);
             packageReq.SetParameter("out_refund_no", param.RefundNumber);
             packageReq.SetParameter("total_fee", (param.TotalFee.Value).ToString(CultureInfo.InvariantCulture));
@@ -156,7 +157,7 @@ namespace Dos.WeChat
             packageReq.SetParameter("sign", packageReq.CreateMd5Sign());
             var reqXml = packageReq.ParseXml();
             var httpClient = new HttpUtil();
-            httpClient.SetCharset(context.Request.ContentEncoding.BodyName);
+            httpClient.SetCharset(HttpContext.Current.Request.ContentEncoding.BodyName);
             httpClient.SetCertInfo(GetConfig.GetCertPath(param), GetConfig.GetCertPwd(param));
             var result = httpClient.Send(reqXml, "https://api.mch.weixin.qq.com/secapi/pay/refund");
             var xe = XElement.Parse(result, LoadOptions.SetLineInfo);
@@ -186,23 +187,16 @@ namespace Dos.WeChat
             #endregion
         }
 
-        public BaseResult Notify(WeChatParam param,HttpContextBase context)
+        public static BaseResult Notify(WeChatParam param)
         {
-            var sbResult = new StringBuilder();
             try
             {
-                sbResult.Append("@参数：" + JsonConvert.SerializeObject(param) + "\r\n");
-                sbResult.Append("@HttpContextLength：" + context.Request.InputStream.Length + "\r\n");
-                sbResult.Append("@开始创建ResponseHandler实例\r\n");
-                var res = new ResponseHandler(context);
-                sbResult.Append("@创建ResponseHandler实例成功\r\n");
+                var res = new ResponseHandler();
                 res.SetKey(GetConfig.GetKey(param));
-                sbResult.Append("@设置密钥成功\r\n");
                 var error = "";
                 //判断签名
                 if (res.IsWXsign(out error))
                 {
-                    sbResult.Append("@判断签名成功\r\n");
                     #region 参数
                     var returnCode = res.GetParameter("return_code");
                     //返回信息，如非空，为错误原因签名失败参数格式校验错误
@@ -235,11 +229,9 @@ namespace Dos.WeChat
                     //格 式 为yyyyMMddhhmmss
                     var timeEnd = res.GetParameter("time_end");
                     #endregion
-                    sbResult.Append("@取所有参数成功\r\n");
                     //支付成功
                     if (!outTradeNo.Equals("") && returnCode.Equals("SUCCESS") && resultCode.Equals("SUCCESS"))
                     {
-                        sbResult.Append("@支付成功\r\n" + outTradeNo);
                         //LogHelper.WriteLog("支付回调：", sbResult.ToString() + "notify > success \r\n",EnumService.LogType.Debug);
                         //在外面回写订单
                         return new BaseResult()
@@ -254,13 +246,11 @@ namespace Dos.WeChat
                     }
                     else
                     {
-                        sbResult.Append("@支付失败\r\n");
                         //LogHelper.WriteLog("支付回调：", sbResult.ToString() + "notify > total_fee= " + totalFee + " \r\n  err_code_des= " + errCodeDes + " \r\n  result_code= " + resultCode + " \r\n", EnumService.LogType.Exception);
                     }
                 }
                 else
                 {
-                    sbResult.Append("@判断签名失败\r\n");
                     //LogHelper.WriteLog("支付回调：",sbResult.ToString() + "notify > isWXsign= false \r\n" + error, EnumService.LogType.Exception);
                 }
             }
@@ -276,13 +266,13 @@ namespace Dos.WeChat
         /// <param name="param"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public string GetUnifiedOrder(PayParam param = null, HttpContextBase context = null)
+        public static string GetUnifiedOrder(PayParam param = null)
         {
             if (param.TotalFee == null || string.IsNullOrWhiteSpace(param.ProductName) || string.IsNullOrWhiteSpace(param.OrderNumber) || string.IsNullOrWhiteSpace(param.TimeExpire) || param.TradeType == null)
             {
                 return "参数错误";
             }
-            var req = new RequestHandler(context);
+            var req = new RequestHandler();
             req.SetKey(GetConfig.GetKey(param));
             req.SetParameter("appid", GetConfig.GetAppid(param));
             req.SetParameter("mch_id", GetConfig.GetMchId(param));
@@ -305,9 +295,7 @@ namespace Dos.WeChat
             var reqXml = req.ParseXml();
             //LogHelper.WriteLog("aa_", "reqXml的值是：" + reqXml);
             var http = new HttpUtil();
-            http.SetCharset(context == null
-                ? HttpContext.Current.Request.ContentEncoding.BodyName
-                : context.Request.ContentEncoding.BodyName);
+            http.SetCharset(HttpContext.Current.Request.ContentEncoding.BodyName);
             var result = http.Send(reqXml, ApiList.UnifiedOrderUrl);
             return result;
         }
@@ -315,21 +303,21 @@ namespace Dos.WeChat
         /// 传入 OpenId,订单Id，金额（分），过期时间（20141010121314），商品名称。
         /// </summary>
         /// <returns></returns>
-        public string CreateJSAPIPayJson(PayParam param, HttpContextBase context = null)
+        public static string CreateJSAPIPayJson(PayParam param)
         {
             if (param.TotalFee == null || string.IsNullOrWhiteSpace(param.ProductName) || string.IsNullOrWhiteSpace(param.OrderNumber) || string.IsNullOrWhiteSpace(param.OpenId) || string.IsNullOrWhiteSpace(param.TimeExpire))
             {
                 return "参数错误";
             }
             param.TradeType = EnumHelper.TradeType.JSAPI;
-            var result = GetUnifiedOrder(param, context);
+            var result = GetUnifiedOrder(param);
             //LogHelper.WriteLog("aa_", "GetUnifiedOrder后的值是：" + result);
             var xe = XElement.Parse(result, LoadOptions.SetLineInfo);
 #warning 这里暂时使用了 redis的Common
             try
             {
                 var prepayId = xe.GetElement("prepay_id").Value;
-                var payReq = new RequestHandler(context);
+                var payReq = new RequestHandler();
                 payReq.SetKey(GetConfig.GetKey(param));
                 payReq.SetParameter("appId", GetConfig.GetAppid(param));
                 payReq.SetParameter("timeStamp", PayUtil.GetTimestamp());

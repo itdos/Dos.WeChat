@@ -32,7 +32,7 @@ namespace Dos.WeChat
         /// <summary>
         /// 
         /// </summary>
-        public RemoteMedia Upload(LocalMedia media)
+        public static RemoteMedia Upload(LocalMedia media)
         {
             var checkRet = Check(media);
             if (!checkRet.IsSuccess)
@@ -56,7 +56,7 @@ namespace Dos.WeChat
         /// <summary>
         ///     检测上传的媒体是否满足基本要求
         /// </summary>
-        private WeChatResult Check(LocalMedia media)
+        private static WeChatResult Check(LocalMedia media)
         {
             var sizes = new Dictionary<string, long>
             {
@@ -81,7 +81,7 @@ namespace Dos.WeChat
         /// <summary>
         /// 传入MediaID，WeChatPublic
         /// </summary>
-        public WeChatResult Download(MediaParam mediaParam)
+        public static WeChatResult Download(MediaParam mediaParam)
         {
             var param = new HttpParam
             {

@@ -43,7 +43,7 @@ namespace Dos.WeChat
         /// 
         /// </summary>
         public string echostr { get; set; }
-        private static void ParseProperties(JoinToken es,HttpContextBase hcb = null)
+        private static void ParseProperties(JoinToken es, HttpContextBase hcb = null)
         {
             if (es == null)
                 return;
@@ -67,16 +67,9 @@ namespace Dos.WeChat
         /// <summary>
         /// 
         /// </summary>
-        public static bool IsGetRequest(HttpContextBase context = null)
+        public static bool IsGetRequest()
         {
-            if (context == null)
-            {
-                return HttpContext.Current.Request.HttpMethod == "GET";
-            }
-            else
-            {
-                return context.Request.HttpMethod == "GET";
-            }
+            return HttpContext.Current.Request.HttpMethod == "GET";
         }
         /// <summary>
         /// 
@@ -88,12 +81,30 @@ namespace Dos.WeChat
         /// <summary>
         /// 
         /// </summary>
-        public static JoinToken ParseJoinToken(HttpContextBase context = null)
+        public static JoinToken ParseJoinToken()
         {
             var result = new JoinToken();
-            ParseProperties(result, context);
+            ParseProperties(result);
             return result;
         }
+        /// <summary>
+        /// 接入微信
+        /// </summary>
+        /// <returns></returns>
+        public static bool Join(IMsgCall call, WeChatParam param = null)
+        {
+            var sign = ParseJoinToken();
+            if (sign.Check(param))
+            {
+                if (JoinToken.IsGetRequest())
+                    sign.Response();
+                else
+                    ReceiveMsg.Reg(call);
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// 验证签名
         /// </summary>
@@ -112,22 +123,12 @@ namespace Dos.WeChat
         /// <summary>
         /// 
         /// </summary>
-        public void Response(HttpContextBase context = null)
+        public void Response()
         {
-            if (context == null)
-            {
-                var response = HttpContext.Current.Response;
-                response.Write(echostr ?? "echostr is null");
-                response.Flush();
-                response.Close();
-            }
-            else
-            {
-                var response = context.Response;
-                response.Write(echostr ?? "echostr is null");
-                response.Flush();
-                response.Close();
-            }
+            var response = HttpContext.Current.Response;
+            response.Write(echostr ?? "echostr is null");
+            response.Flush();
+            response.Close();
         }
     }
 }
