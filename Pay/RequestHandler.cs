@@ -1,7 +1,7 @@
 ﻿#region << 版 本 注 释 >>
 /****************************************************
 * 文 件 名：RequestHandler
-* Copyright(c) 青之软件
+* Copyright(c) 道斯软件
 * CLR 版本: 4.0.30319.17929
 * 创 建 人：ITdos
 * 电子邮箱：admin@itdos.com
@@ -29,6 +29,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
+using Dos.Common;
 
 namespace Dos.WeChat
 {
@@ -141,7 +142,7 @@ namespace Dos.WeChat
                 }
             }
             sb.Append("key=" + GetKey());
-            var sign = MD5Util.GetMD5(sb.ToString(), GetCharset()).ToUpper();
+            var sign = EncryptHelper.MD5EncryptWeChat(sb.ToString(), GetCharset()).ToUpper();
             return sign;
         }
         /// <summary>

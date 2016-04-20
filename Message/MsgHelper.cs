@@ -1,7 +1,7 @@
 ﻿#region << 版 本 注 释 >>
 /****************************************************
 * 文 件 名：MessageHelper
-* Copyright(c) 青之软件
+* Copyright(c) 道斯软件
 * CLR 版本: 4.0.30319.17929
 * 创 建 人：ITdos
 * 电子邮箱：admin@itdos.com
@@ -22,6 +22,7 @@ using System.Text;
 using System.Web;
 using System.Xml;
 using System.Xml.Linq;
+using Dos.Common;
 using Dos.WeChat.Common;
 
 namespace Dos.WeChat
@@ -189,6 +190,33 @@ namespace Dos.WeChat
             ParseReceiveMsg().RegMsgCall().Response(true);
         }
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static ReceiveMsg ParseReceiveMsg()
+        {
+            var request = HttpContext.Current.Request;
+            var sr = new StreamReader(request.InputStream);
+            LogHelper.Debug("开始sr.ReadToEnd()", "微信CallBack_");
+            var text = sr.ReadToEnd();
+            LogHelper.Debug("text：" + text, "微信CallBack_");
+            if (WeChatConfig.IsEncrypt())
+            {
+                var appId = WeChatConfig.GetOpenAppId();
+                var token = WeChatConfig.GetOpenToken();
+                var encodingAesKey = WeChatConfig.GetOpenDesKey();
+                var sMsg = "";//解密后的内容
+                var msg = new WXBizMsgCrypt(token, encodingAesKey, appId);
+                var ret = msg.DecryptMsg(request.QueryString["msg_signature"], request.QueryString["timestamp"], request.QueryString["nonce"], text, ref sMsg);
+
+                LogHelper.Debug(string.Format("结果代码:{0}\r\n解密前内容：{1}\r\n解密后内容：{2}\r\nmsg_signature：{3}\r\ntimestamp：{4}\r\nnonce：{5}", ret, text, sMsg, request.QueryString["msg_signature"], request.QueryString["timestamp"], request.QueryString["nonce"]), "微信CallBack_");
+
+                text = sMsg;
+            }
+            var result = Parse(text);
+            return result;
+        }
+        /// <summary>
         /// 从xml文件解析消息。
         /// </summary>
         public static ReceiveMsg Parse(string text)
@@ -197,18 +225,6 @@ namespace Dos.WeChat
             result.ParseFrom(text);
             return result;
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public static ReceiveMsg ParseReceiveMsg()
-        {
-            var request = HttpContext.Current.Request;
-            var sr = new StreamReader(request.InputStream);
-            var msg = Parse(sr.ReadToEnd());
-            return msg;
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -304,6 +320,7 @@ namespace Dos.WeChat
         {
             if (_IMsgCall == null)
             {
+                LogHelper.Error("未注册事件回调函数!", "微信CallBack_");
                 throw new Exception("未注册事件回调函数！");
             }
             var dic = new Dictionary<EnumHelper.MsgType, Func<ReceiveMsg, ResponseMsg>>
@@ -325,7 +342,7 @@ namespace Dos.WeChat
                 },
                 {
                     EnumHelper.MsgType.Voice, msg => _IMsgCall.VoiceMsgCall(msg as RecVoiceMsg)
-                },
+                }
             };
             var result = dic[MsgType](this);
             _IMsgCall.AfterMsgCall(this, result);
@@ -361,9 +378,25 @@ namespace Dos.WeChat
         public void Response(bool end = true)
         {
             var response = HttpContext.Current.Response;
+            var request = HttpContext.Current.Request;
             if (response.IsClientConnected)
             {
-                response.Write(ToXml());
+                var text = ToXml();
+                if (WeChatConfig.IsEncrypt())
+                {
+                    var appId = WeChatConfig.GetOpenAppId();
+                    var token = WeChatConfig.GetOpenToken();
+                    var encodingAesKey = WeChatConfig.GetOpenDesKey();
+                    var sMsg = "";//加密后的内容
+                    var msg = new WXBizMsgCrypt(token, encodingAesKey, appId);
+                    var ret = msg.EncryptMsg(text, request.QueryString["timestamp"], request.QueryString["nonce"], ref sMsg);
+                    //var ret = msg.DecryptMsg(request.QueryString["msg_signature"], request.QueryString["timestamp"], request.QueryString["nonce"], text, ref sMsg);
+
+                    LogHelper.Debug(string.Format("结果代码:{0}\r\n加密前内容：{1}\r\n加密后内容：{2}\r\nmsg_signature：{3}\r\ntimestamp：{4}\r\nnonce：{5}", ret, text, sMsg, request.QueryString["msg_signature"], request.QueryString["timestamp"], request.QueryString["nonce"]), "微信CallBack_");
+
+                    text = sMsg;
+                }
+                response.Write(text);
                 if (end)
                 {
                     response.Flush();

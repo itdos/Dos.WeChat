@@ -1,7 +1,7 @@
 ﻿#region << 版 本 注 释 >>
 /****************************************************
 * 文 件 名：CreateQrCode
-* Copyright(c) 青之软件
+* Copyright(c) 道斯软件
 * CLR 版本: 4.0.30319.17929
 * 创 建 人：ITdos
 * 电子邮箱：admin@itdos.com
@@ -19,9 +19,12 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace Dos.WeChat.Model
+namespace Dos.WeChat
 {
-    public class CreateQrCode:WeChatParam
+    /// <summary>
+    /// 
+    /// </summary>
+    public class CreateQrCode : WeChatParam
     {
         /// <summary>
         /// 该二维码有效时间，以秒为单位。 最大不超过1800。
@@ -48,12 +51,9 @@ namespace Dos.WeChat.Model
         //public string SceneId { get; set; }
 
         /// <summary>
-        /// 返回表示当前 <see cref="T:System.Object" /> 的 <see cref="T:System.String" />。
+        /// 
         /// </summary>
-        /// <returns>
-        /// <see cref="T:System.String" />，表示当前的 <see cref="T:System.Object" />。
-        /// </returns>
-        public override string ToString()
+        public string ToJsonString()
         {
             var settings = new JsonSerializerSettings
             {

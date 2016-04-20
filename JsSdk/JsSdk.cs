@@ -1,7 +1,7 @@
 ﻿#region << 版 本 注 释 >>
 /****************************************************
 * 文 件 名：JsSdk
-* Copyright(c) 青之软件
+* Copyright(c) 道斯软件
 * CLR 版本: 4.0.30319.18408
 * 创 建 人：ITdos
 * 电子邮箱：admin@itdos.com
@@ -17,29 +17,37 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Dos.Common;
 using Dos.WeChat;
 using Dos.WeChat.Model;
 
 namespace Dos.WeChat
 {
-    public class JsSdk
+    /// <summary>
+    /// 
+    /// </summary>
+    public class JsSdkHelper
     {
         /// <summary>
         /// 必须传入Debug，Url,可选传入：WeChatPublic
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        public static string CreateWxConfig(WeChatParam param)
+        public static BaseResult CreateWxConfig(WeChatParam param)
         {
             try
             {
                 var noncestr = PayUtil.GetNoncestr();
                 var timestamp = PayUtil.GetTimestamp();
-                var jsapiTicket = Token.GetJsapiTicket(param);
-                var appId = GetConfig.GetAppid(param);
+                var jsapiTicket = TokenHelper.GetJsapiTicket();
+                if (!jsapiTicket.IsSuccess)
+                {
+                    return new BaseResult(false, null, jsapiTicket.ErrMsg);
+                }
+                var appId = WeChatConfig.GetAppId();
                 var packageReq = new RequestHandler();
                 packageReq.SetParameter("noncestr", noncestr);
-                packageReq.SetParameter("jsapi_ticket", jsapiTicket);
+                packageReq.SetParameter("jsapi_ticket", jsapiTicket.Ticket);
                 packageReq.SetParameter("timestamp", timestamp);
                 packageReq.SetParameter("url", param.Url);
                 var signature = packageReq.CreateSHA1Sign();
@@ -50,11 +58,11 @@ namespace Dos.WeChat
                 // 必填，签名，见附录1
                 // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
                 var result = "wx.config({debug:" + (param.Debug ? "true" : "false") + ", appId: '" + appId + "', timestamp: " + timestamp + ", nonceStr: '" + noncestr + "', signature: '" + signature + "',jsApiList: ['checkJsApi','onMenuShareTimeline','onMenuShareAppMessage','onMenuShareQQ','onMenuShareWeibo','hideMenuItems','showMenuItems','hideAllNonBaseMenuItem','showAllNonBaseMenuItem','translateVoice','startRecord','stopRecord','onRecordEnd','playVoice','pauseVoice','stopVoice','uploadVoice','downloadVoice','chooseImage','previewImage','uploadImage','downloadImage','getNetworkType','openLocation','getLocation','hideOptionMenu','showOptionMenu','closeWindow','scanQRCode','chooseWXPay','openProductSpecificView','addCard','chooseCard','openCard'] });";//'checkJsApi',
-                return result;
+                return new BaseResult(true, result);
             }
             catch (Exception ex)
             {
-                return "var error='" + ex.Message.Replace("\r\n", "").Replace("\n", "").Replace("\t", "").Replace("<br>", "").Replace("'", "\"") + "';";
+                return new BaseResult(false, null, "var error='" + ex.Message.Replace("\r\n", "").Replace("\n", "").Replace("\t", "").Replace("<br>", "").Replace("'", "\"") + "';");
             }
         }
     }

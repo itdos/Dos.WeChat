@@ -1,7 +1,7 @@
 ﻿#region << 版 本 注 释 >>
 /****************************************************
 * 文 件 名：QrResult
-* Copyright(c) 青之软件
+* Copyright(c) 道斯软件
 * CLR 版本: 4.0.30319.17929
 * 创 建 人：ITdos
 * 电子邮箱：admin@itdos.com
@@ -19,9 +19,12 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace Dos.WeChat.Model
+namespace Dos.WeChat
 {
-    public class QrResult
+    /// <summary>
+    /// 
+    /// </summary>
+    public class QrCodeResult : WeChatResult
     {
         /// <summary>
         /// 获取的二维码ticket，凭借此ticket可以在有效时间内换取二维码。
@@ -40,17 +43,5 @@ namespace Dos.WeChat.Model
         /// </summary>
         [JsonProperty(PropertyName = "url")]
         public string Url { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [JsonProperty(PropertyName = "errcode")]
-        public string Errcode { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [JsonProperty(PropertyName = "errmsg")]
-        public string Errmsg { get; set; }
     }
 }

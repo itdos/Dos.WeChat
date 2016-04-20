@@ -1,7 +1,7 @@
 ﻿#region << 版 本 注 释 >>
 /****************************************************
 * 文 件 名：CreateQRCode
-* Copyright(c) 青之软件
+* Copyright(c) 道斯软件
 * CLR 版本: 4.0.30319.17929
 * 创 建 人：ITdos
 * 电子邮箱：admin@itdos.com
@@ -26,17 +26,24 @@ using Dos.WeChat.Model;
 
 namespace Dos.WeChat
 {
-    public class QrCode
+    /// <summary>
+    /// 
+    /// </summary>
+    public class QrCodeHelper
     {
-
         /// <summary>
         /// 创建二维码。
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public static QrResult CreateTempQrCode(CreateQrCode msg)
+        public static QrCodeResult CreateTempQrCode(CreateQrCode msg)
         {
-            var result = HttpHelper.Post<QrResult>(ApiList.QrcodeCreateUrl, msg.ToString(), "access_token=" + Token.GetAccessToken(msg));
+            var result = HttpHelper.Post<QrCodeResult>(new HttpParam()
+            {
+                Url = ApiList.QrcodeCreateUrl,
+                PostParam = msg.ToJsonString(),
+                GetParam = "access_token=" + TokenHelper.GetAccessToken()
+            });
             return result;
         }
         /// <summary>
@@ -47,9 +54,16 @@ namespace Dos.WeChat
         public static Stream GetTempQrCode(CreateQrCode msg)
         {
             msg.ActionName = EnumHelper.QrCodeType.QR_SCENE.ToString();
-            var result = HttpHelper.Post<QrResult>(ApiList.QrcodeCreateUrl, msg.ToString(), "access_token=" + Token.GetAccessToken(msg));
-            var url = ApiList.ShowQrcodeUrl + "?ticket=" + result.Ticket + "&access_token=" + Token.GetAccessToken(msg);
-            var stream = HttpHelper.GetStream(url,"");
+            var result = HttpHelper.Post<QrCodeResult>(
+                new HttpParam()
+                {
+                    Url =
+                        ApiList.QrcodeCreateUrl,
+                    PostParam = msg.ToJsonString(),
+                    GetParam = "access_token=" + TokenHelper.GetAccessToken()
+                });
+            var url = ApiList.ShowQrcodeUrl + "?ticket=" + result.Ticket + "&access_token=" + TokenHelper.GetAccessToken();
+            var stream = HttpHelper.GetStream(url);
             return stream;
         }
         /// <summary>
@@ -60,10 +74,16 @@ namespace Dos.WeChat
         public static Stream GetEverQrCode(CreateQrCode msg)
         {
             msg.ActionName = EnumHelper.QrCodeType.QR_LIMIT_STR_SCENE.ToString();
-            var result = HttpHelper.Post<QrResult>(ApiList.QrcodeCreateUrl, msg.ToString(),
-                "access_token=" + Token.GetAccessToken(msg));
-            var url = ApiList.ShowQrcodeUrl + "?ticket=" + result.Ticket + "&access_token=" + Token.GetAccessToken(msg);
-            var stream = HttpHelper.GetStream(url, "");
+            var result = HttpHelper.Post<QrCodeResult>(
+                new HttpParam()
+                {
+                    Url =
+                        ApiList.QrcodeCreateUrl,
+                    PostParam = msg.ToJsonString(),
+                    GetParam = "access_token=" + TokenHelper.GetAccessToken()
+                });
+            var url = ApiList.ShowQrcodeUrl + "?ticket=" + result.Ticket + "&access_token=" + TokenHelper.GetAccessToken();
+            var stream = HttpHelper.GetStream(url);
             return stream;
         }
     }

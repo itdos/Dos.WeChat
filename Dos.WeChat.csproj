@@ -39,12 +39,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dos.Common, Version=1.0.3.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dos.Common.1.0.3.1\lib\net40\Dos.Common.dll</HintPath>
+    <Reference Include="Dos.Common, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\IT大师\Dos.Net\Dos.Net\packages\Dos.Common.1.0.5.0\lib\net40\Dos.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\IT大师\Dos.Net\Dos.Net\packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -58,46 +59,54 @@
   <ItemGroup>
     <Compile Include="Common\ApiList.cs" />
     <Compile Include="Common\AttributeHelper.cs" />
-    <Compile Include="Common\UserParam.cs" />
-    <Compile Include="Common\WeChatResult.cs" />
+    <Compile Include="Common\FixNamespace.cs" />
+    <Compile Include="Model\ComponentTokenResult.cs" />
+    <Compile Include="Model\MenuResult.cs" />
+    <Compile Include="Model\QueryAuthResult.cs" />
+    <Compile Include="Model\CreatePreauthcodeResult.cs" />
+    <Compile Include="Model\AuthorizerTokenResult.cs" />
+    <Compile Include="Model\TokenResult.cs" />
+    <Compile Include="Model\WeChatResult.cs" />
     <Compile Include="Base\Token.cs" />
     <Compile Include="Base\JoinToken.cs" />
     <Compile Include="Common\EnumHelper.cs" />
-    <Compile Include="Common\Exception.cs" />
-    <Compile Include="Common\GetConfig.cs" />
+    <Compile Include="Model\JsapiTicketResult.cs" />
+    <Compile Include="Common\WeChatConfig.cs" />
+    <Compile Include="Model\GetAuthorizerInfoResult.cs" />
+    <Compile Include="Material\MaterialHelper.cs" />
     <Compile Include="Menu\MenuHelper.cs" />
+    <Compile Include="Open\Cryptography.cs" />
+    <Compile Include="Open\Open.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Open\WXBizMsgCrypt.cs" />
     <Compile Include="User\UserHelper.cs" />
-    <Compile Include="Models\WeChatParam.cs" />
-    <Compile Include="Base\MediaApi.cs" />
+    <Compile Include="Common\WeChatParam.cs" />
     <Compile Include="JsSdk\JsSdk.cs" />
     <Compile Include="Message\IMsggCall.cs" />
     <Compile Include="Message\MsgHelper.cs" />
     <Compile Include="Message\Message.cs" />
-    <Compile Include="Models\MsgModel.cs" />
-    <Compile Include="Models\BaseResultModel.cs" />
-    <Compile Include="Models\Bill.cs" />
-    <Compile Include="Models\CreateQrCode.cs" />
-    <Compile Include="Common\MsgParam.cs" />
-    <Compile Include="Models\QrResult.cs" />
-    <Compile Include="Models\UserInfoModel.cs" />
-    <Compile Include="Pay\HttpUtil.cs" />
-    <Compile Include="Pay\MD5Util.cs" />
+    <Compile Include="Model\MsgModel.cs" />
+    <Compile Include="Model\Bill.cs" />
+    <Compile Include="Model\CreateQrCode.cs" />
+    <Compile Include="Model\QrCodeResult.cs" />
+    <Compile Include="Model\UserInfoResult.cs" />
     <Compile Include="Pay\PayParam.cs" />
     <Compile Include="Pay\RequestHandler.cs" />
     <Compile Include="Pay\ResponseHandler.cs" />
     <Compile Include="Pay\SHA1Util.cs" />
     <Compile Include="Pay\PayUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Account\QrCode.cs" />
+    <Compile Include="Account\QrCodeHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Dos.Common更新日志.txt" />
+    <None Include="Dos.WeChat更新日志.txt" />
     <Content Include="LICENSE" />
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

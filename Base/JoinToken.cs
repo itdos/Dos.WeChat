@@ -1,7 +1,7 @@
 ﻿#region << 版 本 注 释 >>
 /****************************************************
 * 文 件 名：EntrySign
-* Copyright(c) 青之软件
+* Copyright(c) 道斯软件
 * CLR 版本: 4.0.30319.17929
 * 创 建 人：ITdos
 * 电子邮箱：admin@itdos.com
@@ -18,6 +18,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Security;
+using Dos.Common;
 using Dos.WeChat.Model;
 
 namespace Dos.WeChat
@@ -43,25 +44,18 @@ namespace Dos.WeChat
         /// 
         /// </summary>
         public string echostr { get; set; }
-        private static void ParseProperties(JoinToken es, HttpContextBase hcb = null)
+        private static void ParseProperties(JoinToken es)
         {
             if (es == null)
                 return;
-
             var ps = es.GetType().GetProperties();
             foreach (var p in ps)
             {
-                if (hcb == null)
-                {
-                    var context = HttpContext.Current;
-                    if (context == null)
-                        return;
-                    p.SetValue(es, context.Request[p.Name], null);
-                }
-                else
-                {
-                    p.SetValue(es, hcb.Request[p.Name], null);
-                }
+                var context = HttpContext.Current;
+                if (context == null)
+                    return;
+                p.SetValue(es, context.Request[p.Name], null);
+                LogHelper.Debug("ParseProperties）" + p.Name +"：" + context.Request[p.Name], "微信CallBack_");
             }
         }
         /// <summary>
@@ -91,10 +85,10 @@ namespace Dos.WeChat
         /// 接入微信
         /// </summary>
         /// <returns></returns>
-        public static bool Join(IMsgCall call, WeChatParam param = null)
+        public static bool Join(IMsgCall call)
         {
             var sign = ParseJoinToken();
-            if (sign.Check(param))
+            if (sign.Check())
             {
                 if (JoinToken.IsGetRequest())
                     sign.Response();
@@ -106,11 +100,34 @@ namespace Dos.WeChat
         }
 
         /// <summary>
-        /// 验证签名
+        /// 验证签名。默认公众号不需要参数。传入authorizer_appid(授权方appid)、authorizer_refresh_token(授权方的刷新令牌)则验证该公众号(用于微信开放平台)、component_verify_ticket(微信后台推送的ticket，此ticket会定时推送)
         /// </summary>
         public bool Check(WeChatParam param = null)
         {
-            var token = GetConfig.GetToken(param);
+            string token;
+            if (param != null && !string.IsNullOrWhiteSpace(param.AuthorizerAppid))
+            {
+                if (string.IsNullOrWhiteSpace(param.AuthorizerRefreshToken))
+                {
+                    LogHelper.Debug("参数错误！authorizer_refresh_token必传！", "微信CallBack_");
+                    return false;
+                }
+                var bs = TokenHelper.GetAuthorizerAccessToken(new WeChatParam()
+                {
+                    AuthorizerAppid = param.AuthorizerAppid,
+                    AuthorizerRefreshToken = param.AuthorizerRefreshToken,
+                    ComponentVerifyTicket = param.ComponentVerifyTicket
+                });
+                if (!bs.IsSuccess)
+                {
+                    return false;
+                }
+                token = bs.AuthorizerAccessToken;
+            }
+            else
+            {
+                token = WeChatConfig.GetToken();
+            }
             var vs = new[] { timestamp, nonce, token }.OrderBy(s => s);
             var str = string.Join("", vs);
             var copu = FormsAuthentication.HashPasswordForStoringInConfigFile(str, "SHA1");

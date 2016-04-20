@@ -1,7 +1,7 @@
 ﻿#region << 版 本 注 释 >>
 /****************************************************
 * 文 件 名：TenpayUtil
-* Copyright(c) 青之软件
+* Copyright(c) 道斯软件
 * CLR 版本: 4.0.30319.17929
 * 创 建 人：ITdos
 * 电子邮箱：admin@itdos.com
@@ -25,7 +25,6 @@ using System.Web;
 using System.Web.Configuration;
 using System.Xml.Linq;
 using Dos.Common;
-using Dos.Common.Helper;
 using Dos.WeChat.Common;
 using Dos.WeChat.Model;
 using Newtonsoft.Json;
@@ -40,29 +39,32 @@ namespace Dos.WeChat
         /// <summary>
         /// billDate格式 20141212
         /// </summary>
-        /// <param name="context"></param>
         /// <param name="billDate"></param>
         /// <returns></returns>
-        public static BaseResult DownloadBill(string billDate, WeChatParam param)
+        public static BaseResult DownloadBill(string billDate)
         {
             var packageReq = new RequestHandler();
-            packageReq.SetKey(GetConfig.GetKey(param));
-            packageReq.SetParameter("appid", GetConfig.GetAppid(param));
-            packageReq.SetParameter("mch_id", GetConfig.GetMchId(param));
+            packageReq.SetKey(WeChatConfig.GetKey());
+            packageReq.SetParameter("appid", WeChatConfig.GetAppId());
+            packageReq.SetParameter("mch_id", WeChatConfig.GetMchId());
             packageReq.SetParameter("nonce_str", GetNoncestr());
             packageReq.SetParameter("bill_date", billDate);
             packageReq.SetParameter("bill_type", "ALL");
             packageReq.SetParameter("sign", packageReq.CreateMd5Sign());
             var reqXml = packageReq.ParseXml();
-            var httpClient = new HttpUtil();
-            httpClient.SetCharset(HttpContext.Current.Request.ContentEncoding.BodyName);
-            var result = httpClient.Send(reqXml, ApiList.DownloadBillUrl);
+            //httpClient.SetCharset(HttpContext.Current.Request.ContentEncoding.BodyName);
+            var result = HttpHelper.Post(new HttpParam()
+            {
+                Url = ApiList.DownloadBillUrl, 
+                PostParam = reqXml,
+                Encoding = HttpContext.Current.Request.ContentEncoding
+            });
             try
             {
                 var xe = XElement.Parse(result, LoadOptions.SetLineInfo);
                 var reResult1 = xe.GetElement("return_code") == null ? "" : xe.GetElement("return_code").Value;
                 var reResult2 = xe.GetElement("return_msg") == null ? "" : xe.GetElement("return_msg").Value;
-                return new BaseResult() { IsSuccess = false, Data = "", Message = reResult1 +"_" + reResult2 };
+                return new BaseResult() { IsSuccess = false, Data = "", Message = reResult1 + "_" + reResult2 };
             }
             catch (Exception)
             {
@@ -144,22 +146,26 @@ namespace Dos.WeChat
 
             #region 微信退款
             var packageReq = new RequestHandler();
-            packageReq.SetKey(GetConfig.GetKey(param));
-            packageReq.SetParameter("appid", GetConfig.GetAppid(param));
-            packageReq.SetParameter("mch_id", GetConfig.GetMchId(param));
+            packageReq.SetKey(WeChatConfig.GetKey());
+            packageReq.SetParameter("appid", WeChatConfig.GetAppId());
+            packageReq.SetParameter("mch_id", WeChatConfig.GetMchId());
             packageReq.SetParameter("nonce_str", GetNoncestr());
             //packageReq.SetParameter("transaction_id", "");
             packageReq.SetParameter("out_trade_no", param.OrderNumber);
             packageReq.SetParameter("out_refund_no", param.RefundNumber);
             packageReq.SetParameter("total_fee", (param.TotalFee.Value).ToString(CultureInfo.InvariantCulture));
             packageReq.SetParameter("refund_fee", param.RefundFee.Value.ToString(CultureInfo.InvariantCulture));
-            packageReq.SetParameter("op_user_id", GetConfig.GetMchId(param));
+            packageReq.SetParameter("op_user_id", WeChatConfig.GetMchId());
             packageReq.SetParameter("sign", packageReq.CreateMd5Sign());
             var reqXml = packageReq.ParseXml();
-            var httpClient = new HttpUtil();
-            httpClient.SetCharset(HttpContext.Current.Request.ContentEncoding.BodyName);
-            httpClient.SetCertInfo(GetConfig.GetCertPath(param), GetConfig.GetCertPwd(param));
-            var result = httpClient.Send(reqXml, "https://api.mch.weixin.qq.com/secapi/pay/refund");
+            var result = HttpHelper.Post(new HttpParam()
+            {
+                Url = "https://api.mch.weixin.qq.com/secapi/pay/refund",
+                PostParam = reqXml,
+                Encoding = HttpContext.Current.Request.ContentEncoding,
+                CertPath = WeChatConfig.GetCertPath(),
+                CertPwd = WeChatConfig.GetCertPwd()
+            });
             var xe = XElement.Parse(result, LoadOptions.SetLineInfo);
             var returnCode = xe.GetElement("return_code").Value;
             //退款成功
@@ -187,12 +193,12 @@ namespace Dos.WeChat
             #endregion
         }
 
-        public static BaseResult Notify(WeChatParam param)
+        public static BaseResult Notify()
         {
             try
             {
                 var res = new ResponseHandler();
-                res.SetKey(GetConfig.GetKey(param));
+                res.SetKey(WeChatConfig.GetKey());
                 var error = "";
                 //判断签名
                 if (res.IsWXsign(out error))
@@ -273,9 +279,9 @@ namespace Dos.WeChat
                 return "参数错误";
             }
             var req = new RequestHandler();
-            req.SetKey(GetConfig.GetKey(param));
-            req.SetParameter("appid", GetConfig.GetAppid(param));
-            req.SetParameter("mch_id", GetConfig.GetMchId(param));
+            req.SetKey(WeChatConfig.GetKey());
+            req.SetParameter("appid", WeChatConfig.GetAppId());
+            req.SetParameter("mch_id", WeChatConfig.GetMchId());
             req.SetParameter("nonce_str", GetNoncestr());
             req.SetParameter("body", param.ProductName);
             req.SetParameter("out_trade_no", param.OrderNumber);
@@ -283,8 +289,8 @@ namespace Dos.WeChat
             req.SetParameter("spbill_create_ip", IPHelper.GetVisitorIP());
             req.SetParameter("time_start", DateTime.Now.ToString("yyyyMMddHHmmss"));
             req.SetParameter("time_expire", param.TimeExpire);
-            req.SetParameter("notify_url", 
-                string.IsNullOrWhiteSpace(param.NotifyUrl) ? GetConfig.GetNotify(param) : param.NotifyUrl);
+            req.SetParameter("notify_url",
+                string.IsNullOrWhiteSpace(param.NotifyUrl) ? WeChatConfig.GetNotify() : param.NotifyUrl);
             req.SetParameter("trade_type", param.TradeType.ToString());
             if (!string.IsNullOrWhiteSpace(param.OpenId))
             {
@@ -293,10 +299,12 @@ namespace Dos.WeChat
             req.SetParameter("sign", req.CreateMd5Sign());
 
             var reqXml = req.ParseXml();
-            //LogHelper.WriteLog("aa_", "reqXml的值是：" + reqXml);
-            var http = new HttpUtil();
-            http.SetCharset(HttpContext.Current.Request.ContentEncoding.BodyName);
-            var result = http.Send(reqXml, ApiList.UnifiedOrderUrl);
+            var result = HttpHelper.Post(new HttpParam()
+            {
+                Url = ApiList.UnifiedOrderUrl,
+                PostParam = reqXml,
+                Encoding = HttpContext.Current.Request.ContentEncoding
+            });
             return result;
         }
         /// <summary>
@@ -318,8 +326,8 @@ namespace Dos.WeChat
             {
                 var prepayId = xe.GetElement("prepay_id").Value;
                 var payReq = new RequestHandler();
-                payReq.SetKey(GetConfig.GetKey(param));
-                payReq.SetParameter("appId", GetConfig.GetAppid(param));
+                payReq.SetKey(WeChatConfig.GetKey());
+                payReq.SetParameter("appId", WeChatConfig.GetAppId());
                 payReq.SetParameter("timeStamp", PayUtil.GetTimestamp());
                 payReq.SetParameter("nonceStr", PayUtil.GetNoncestr());
                 payReq.SetParameter("package", "prepay_id=" + prepayId);
@@ -348,7 +356,7 @@ namespace Dos.WeChat
         public static string GetNoncestr()
         {
             var random = new Random();
-            return MD5Util.GetMD5(random.Next(1000).ToString(CultureInfo.InvariantCulture), "GBK");
+            return EncryptHelper.MD5EncryptWeChat(random.Next(1000).ToString(CultureInfo.InvariantCulture), "GBK");
         }
         public static string GetTimestamp()
         {
@@ -359,22 +367,15 @@ namespace Dos.WeChat
         /// 对字符串进行URL编码
         /// </summary>
         /// <param name="instr"></param>
-        /// <param name="charset"></param>
+        /// <param name="charset">默认值：utf-8</param>
         /// <returns></returns>
         public static string UrlEncode(string instr, string charset)
         {
-            //return instr;
             if (instr == null || instr.Trim() == "")
                 return "";
-            string res;
-            try
-            {
-                res = HttpUtility.UrlEncode(instr, Encoding.GetEncoding(charset));
-            }
-            catch
-            {
-                res = HttpUtility.UrlEncode(instr, Encoding.GetEncoding("utf-8"));
-            }
+            var res = HttpUtility.UrlEncode(instr, !string.IsNullOrWhiteSpace(charset)
+               ? Encoding.GetEncoding(charset)
+               : Encoding.GetEncoding("utf-8"));
             return res;
         }
 
@@ -388,20 +389,10 @@ namespace Dos.WeChat
         {
             if (instr == null || instr.Trim() == "")
                 return "";
-            else
-            {
-                string res;
-                try
-                {
-                    res = HttpUtility.UrlDecode(instr, Encoding.GetEncoding(charset));
-                }
-                catch
-                {
-                    res = HttpUtility.UrlDecode(instr, Encoding.GetEncoding("utf-8"));
-                }
-                return res;
-
-            }
+            var res = HttpUtility.UrlDecode(instr, !string.IsNullOrWhiteSpace(charset)
+               ? Encoding.GetEncoding(charset)
+               : Encoding.GetEncoding("utf-8"));
+            return res;
         }
         /// <summary>
         /// 取时间戳生成随即数,替换交易单号中的后10位流水号

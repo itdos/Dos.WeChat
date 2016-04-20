@@ -1,7 +1,7 @@
 ﻿#region << 版 本 注 释 >>
 /****************************************************
 * 文 件 名：ResponseHandler
-* Copyright(c) 青之软件
+* Copyright(c) 道斯软件
 * CLR 版本: 4.0.30319.17929
 * 创 建 人：ITdos
 * 电子邮箱：admin@itdos.com
@@ -29,6 +29,7 @@ using System.Web;
 using System.Web.Configuration;
 using System.Xml;
 using System.Text;
+using Dos.Common;
 
 namespace Dos.WeChat
 {
@@ -139,54 +140,10 @@ namespace Dos.WeChat
                 sb.Append(k + "=" + v + "&");
             }
             sb.Append("key=" + this._key);
-            var sign = MD5Util.GetMD5(sb.ToString(), Charset).ToUpper();
+            var sign = EncryptHelper.MD5EncryptWeChat(sb.ToString(), Charset).ToUpper();
             error = "sign = " + sign + "\r\n xmlMap[sign]=" + xmlMap["sign"].ToString();
             return sign.Equals(xmlMap["sign"]);
         }
-
-        /// <summary>
-        /// 判断微信维权签名
-        /// </summary>
-        /// <returns></returns>
-        public virtual bool IsWXsignfeedback()
-        {
-            return true;
-            //StringBuilder sb = new StringBuilder();
-            //Hashtable signMap = new Hashtable();
-
-            //foreach (string k in xmlMap.Keys)
-            //{
-            //    if (SignField.IndexOf(k.ToLower()) != -1)
-            //    {
-            //        signMap.Add(k.ToLower(), xmlMap[k]);
-            //    }
-            //}
-            //signMap.Add("appkey", this.appkey);
-
-
-            //ArrayList akeys = new ArrayList(signMap.Keys);
-            //akeys.Sort();
-
-            //foreach (string k in akeys)
-            //{
-            //    string v = (string)signMap[k];
-            //    if (sb.Length == 0)
-            //    {
-            //        sb.Append(k + "=" + v);
-            //    }
-            //    else
-            //    {
-            //        sb.Append("&" + k + "=" + v);
-            //    }
-            //}
-
-            //string sign = SHA1Util.getSha1(sb.ToString()).ToString().ToLower();
-
-            //this.setDebugInfo(sb.ToString() + " => SHA1 sign:" + sign);
-
-            //return sign.Equals(xmlMap["AppSignature"]);
-        }
-
         /// <summary>
         /// 获取编码方式
         /// </summary>

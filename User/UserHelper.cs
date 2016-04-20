@@ -1,7 +1,7 @@
 ﻿#region << 版 本 注 释 >>
 /****************************************************
 * 文 件 名：UserHelper
-* Copyright(c) 青之软件
+* Copyright(c) 道斯软件
 * CLR 版本: 4.0.30319.18408
 * 创 建 人：ITdos
 * 电子邮箱：admin@itdos.com
@@ -13,56 +13,54 @@
 * 备注描述：
 *******************************************************/
 #endregion
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Dos.Common;
-using Dos.WeChat.Common;
-using Dos.WeChat.Model;
 
 namespace Dos.WeChat
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class UserHelper
     {
-        
+
         /// <summary>
         /// 传入OpenId，AccessToken
         /// </summary>
-        public static UserInfoModel GetSnsUserInfo(WeChatParam param)
+        public static UserInfoResult GetSnsUserInfo(WeChatParam param)
         {
-            var result = HttpHelper.Get<UserInfoModel>(ApiList.SnsUserInfo, new HttpParam()
+            var result = HttpHelper.Get<UserInfoResult>(ApiList.SnsUserInfo, new
             {
-                { "access_token", param.AccessToken }, 
-                { "openid", param.OpenId }, 
-                { "lang", "zh_CN" }
+                access_token = param.AccessToken,
+                openid = param.OpenId,
+                lang = "zh_CN"
             });
             return result;
         }
         /// <summary>
         /// 传入OpenId，AccessToken
         /// </summary>
-        public static UserInfoModel GetUserInfo(WeChatParam param)
+        public static UserInfoResult GetUserInfo(WeChatParam param)
         {
-            var result = HttpHelper.Get<UserInfoModel>(ApiList.GetUserInfo, new HttpParam()
+            var result = HttpHelper.Get<UserInfoResult>(ApiList.GetUserInfo, new
             {
-                { "access_token", Token.GetAccessToken(param) }, 
-                { "openid", param.OpenId }, 
-                { "lang", "zh_CN" }
+                access_token = TokenHelper.GetAccessToken(),
+                openid = param.OpenId,
+                lang = "zh_CN"
             });
             return result;
         }
         /// <summary>
         /// 传入Code
         /// </summary>
-        public static Dictionary<string, string> GetOauth2AccessToken(UserParam param)
+        public static Dictionary<string, string> GetOauth2AccessToken(WeChatParam param)
         {
-            var param2 = new HttpParam()
+            var param2 = new
             {
-                {"appid",GetConfig.GetAppid(param)},
-                {"secret", GetConfig.GetSecret(param)},
-                {"code", param.Code},
-                {"grant_type", "authorization_code"}
+                appid = WeChatConfig.GetAppId(),
+                secret = WeChatConfig.GetSecret(),
+                code = param.Code,
+                grant_type = "authorization_code"
             };
             var dic = HttpHelper.Get<Dictionary<string, string>>(ApiList.GetOauth2AccessTokenUrl, param2);
             return dic;

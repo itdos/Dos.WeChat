@@ -1,7 +1,7 @@
 ﻿#region << 版 本 注 释 >>
 /****************************************************
 * 文 件 名：UserInfoModel
-* Copyright(c) 青之软件
+* Copyright(c) 道斯软件
 * CLR 版本: 4.0.30319.18408
 * 创 建 人：ITdos
 * 电子邮箱：admin@itdos.com
@@ -19,9 +19,12 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace Dos.WeChat.Model
+namespace Dos.WeChat
 {
-    public class UserInfoModel
+    /// <summary>
+    /// 
+    /// </summary>
+    public class UserInfoResult
     {
         /// <summary>
         /// 用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号，拉取不到其余信息。

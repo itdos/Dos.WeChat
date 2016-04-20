@@ -1,7 +1,7 @@
 ﻿#region << 版 本 注 释 >>
 /****************************************************
 * 文 件 名：EnumService
-* Copyright(c) 青之软件
+* Copyright(c) 道斯软件
 * CLR 版本: 4.0.30319.17929
 * 创 建 人：ITdos
 * 电子邮箱：admin@itdos.com
@@ -23,6 +23,21 @@ namespace Dos.WeChat
 {
     public class EnumHelper
     {
+        /// <summary>
+        /// 微信接入方式
+        /// </summary>
+        public enum WeChatType
+        {
+            /// <summary>
+            /// 公众号
+            /// </summary>
+            Public = 1,
+            /// <summary>
+            /// 开放平台
+            /// </summary>
+            Open = 2
+        }
+
         /// <summary>
         /// 接收或响应的消息类型
         /// </summary>
