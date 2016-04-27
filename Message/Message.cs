@@ -16,13 +16,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Text;using Dos.Common;
 using Dos.Common;
 using Dos.WeChat;
 using Dos.WeChat.Common;
 using Dos.WeChat.Model;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Dos.WeChat
 {
@@ -86,10 +84,10 @@ namespace Dos.WeChat
 
         private string GetMsgData(WeChatParam msg)
         {
-            var settings = new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore
-            };
+            //var settings = new JsonSerializerSettings
+            //{
+            //    NullValueHandling = NullValueHandling.Ignore
+            //};
             if (msg.MsgType == "news")
             {
                 var a =
@@ -99,7 +97,7 @@ namespace Dos.WeChat
                     msgtype = msg.MsgType,
                     news = new { articles = msg.Text }
                 };
-                var result = JsonConvert.SerializeObject(a, settings);
+                var result = JSON.ToJSON(a);//, settings
                 return result;
             }
             else
@@ -111,7 +109,7 @@ namespace Dos.WeChat
                         msgtype = msg.MsgType,
                         touser = msg.ToUser
                     };
-                var result = JsonConvert.SerializeObject(a, settings);
+                var result = JSON.ToJSON(a);//, settings
                 return result;
             }
         }
@@ -130,7 +128,7 @@ namespace Dos.WeChat
                     color = "#173177"
                 });
             }
-            var param = JsonConvert.SerializeObject(new
+            var param = JSON.ToJSON(new
             {
                 touser = msg.ToUser,
                 template_id = msg.TemplateId,

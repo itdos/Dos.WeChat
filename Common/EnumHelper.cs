@@ -16,8 +16,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
+using System.Text;using Dos.Common;
+
 using  Dos.WeChat.Common;
 namespace Dos.WeChat
 {

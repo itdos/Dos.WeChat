@@ -16,8 +16,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
+using System.Text;using Dos.Common;
+
 
 namespace Dos.WeChat
 {
@@ -122,27 +122,27 @@ namespace Dos.WeChat
         /// <summary>
         /// 接收消息的用户的openid
         /// </summary>
-        [JsonProperty(PropertyName = "touser")]
+        [JsonProp(PropertyName = "touser")]
         public string ToUser { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "template_id")]
+        [JsonProp(PropertyName = "template_id")]
         public string TemplateId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "data")]
+        [JsonProp(PropertyName = "data")]
         public Dictionary<string, string> Data { get; set; }
         /// <summary>
         /// 消息类型
         /// </summary>
-        [JsonProperty(PropertyName = "msgtype")]
+        [JsonProp(PropertyName = "msgtype")]
         public string MsgType { get; set; }
         /// <summary>
         /// 消息类型
         /// </summary>
-        [JsonProperty(PropertyName = "text")]
+        [JsonProp(PropertyName = "text")]
         public object Text { get; set; }
         #endregion
 
@@ -157,7 +157,7 @@ namespace Dos.WeChat
         /// <summary>
         ///     媒体文件上传后，获取时的唯一标识
         /// </summary>
-        [JsonProperty(PropertyName = "media_id")]
+        [JsonProp(PropertyName = "media_id")]
         public string MediaId { get; set; }
         /// <summary>
         /// 

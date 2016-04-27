@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
+using System.Text;using Dos.Common;
+using Dos.Common;
+
 
 namespace Dos.WeChat
 {
@@ -14,12 +15,12 @@ namespace Dos.WeChat
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "authorizer_info")]
+        [JsonProp(PropertyName = "authorizer_info")]
         public AuthorizerInfo AuthorizerInfo { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "authorization_info")]
+        [JsonProp(PropertyName = "authorization_info")]
         public AuthorizationInfo AuthorizationInfo { get; set; }
         
     }
@@ -31,42 +32,42 @@ namespace Dos.WeChat
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "nick_name")]
+        [JsonProp(PropertyName = "nick_name")]
         public string NickName { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "head_img")]
+        [JsonProp(PropertyName = "head_img")]
         public string HeadImg { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "service_type_info")]
+        [JsonProp(PropertyName = "service_type_info")]
         public ServiceTypeInfo ServiceTypeInfo { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "verify_type_info")]
+        [JsonProp(PropertyName = "verify_type_info")]
         public VerifyTypeInfo VerifyTypeInfo { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "user_name")]
+        [JsonProp(PropertyName = "user_name")]
         public string UserName { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "business_info")]
+        [JsonProp(PropertyName = "business_info")]
         public BusinessInfo BusinessInfo { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "alias")]
+        [JsonProp(PropertyName = "alias")]
         public string Alias { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "qrcode_url")]
+        [JsonProp(PropertyName = "qrcode_url")]
         public string QrcodeUrl { get; set; }
     }
     /// <summary>
@@ -77,7 +78,7 @@ namespace Dos.WeChat
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "id")]
+        [JsonProp(PropertyName = "id")]
         public int Id { get; set; }
     }
     /// <summary>
@@ -88,7 +89,7 @@ namespace Dos.WeChat
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "id")]
+        [JsonProp(PropertyName = "id")]
         public int Id { get; set; }
     }
     /// <summary>
@@ -99,27 +100,27 @@ namespace Dos.WeChat
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "open_store")]
+        [JsonProp(PropertyName = "open_store")]
         public int OpenStore { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "open_scan")]
+        [JsonProp(PropertyName = "open_scan")]
         public int OpenScan { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "open_pay")]
+        [JsonProp(PropertyName = "open_pay")]
         public int OpenPay { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "open_card")]
+        [JsonProp(PropertyName = "open_card")]
         public int OpenCard { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "open_shake")]
+        [JsonProp(PropertyName = "open_shake")]
         public int OpenShake { get; set; }
     }
 }

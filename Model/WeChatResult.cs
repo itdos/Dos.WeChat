@@ -14,7 +14,8 @@
 *******************************************************/
 #endregion
 using System;
-using Newtonsoft.Json;
+using Dos.Common;
+
 
 namespace Dos.WeChat
 {
@@ -51,7 +52,7 @@ namespace Dos.WeChat
         /// <summary>
         /// 结果码
         /// </summary>
-        [JsonProperty(PropertyName = "errcode")]
+        [JsonProp(PropertyName = "errcode")]
         public int ErrCode
         {
             get { return _errCode; }
@@ -65,7 +66,7 @@ namespace Dos.WeChat
         /// <summary>
         /// 结果文本说明
         /// </summary>
-        [JsonProperty(PropertyName = "errmsg")]
+        [JsonProp(PropertyName = "errmsg")]
         public string ErrMsg
         {
             get { return _errMsg; }

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
+using System.Text;using Dos.Common;
+using Dos.Common;
+
 
 namespace Dos.WeChat
 {
@@ -14,7 +15,7 @@ namespace Dos.WeChat
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "authorization_info")]
+        [JsonProp(PropertyName = "authorization_info")]
         public AuthorizationInfo AuthorizationInfo { get; set; }
     }
     /// <summary>
@@ -25,27 +26,27 @@ namespace Dos.WeChat
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "authorizer_appid")]
+        [JsonProp(PropertyName = "authorizer_appid")]
         public string AuthorizerAppid { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "authorizer_access_token")]
+        [JsonProp(PropertyName = "authorizer_access_token")]
         public string AuthorizerAccessToken { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "authorizer_refresh_token")]
+        [JsonProp(PropertyName = "authorizer_refresh_token")]
         public string AuthorizerRefreshToken { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "expires_in")]
+        [JsonProp(PropertyName = "expires_in")]
         public int ExpiresIn { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "func_info")]
+        [JsonProp(PropertyName = "func_info")]
         public List<FuncInfo> FuncInfo { get; set; }
     }
     /// <summary>
@@ -56,7 +57,7 @@ namespace Dos.WeChat
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "funcscope_category")]
+        [JsonProp(PropertyName = "funcscope_category")]
         public FuncscopeCategory FuncscopeCategory { get; set; }
     }
     /// <summary>
@@ -67,7 +68,7 @@ namespace Dos.WeChat
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "id")]
+        [JsonProp(PropertyName = "id")]
         public int Id { get; set; }
     }
 }

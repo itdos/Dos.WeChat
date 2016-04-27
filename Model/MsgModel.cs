@@ -15,7 +15,7 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Text;
+using System.Text;using Dos.Common;
 using Dos.WeChat.Common;
 
 namespace Dos.WeChat

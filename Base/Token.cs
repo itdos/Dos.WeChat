@@ -20,7 +20,7 @@ using Dos.Common;
 using Dos.WeChat;
 using Dos.WeChat.Common;
 using Dos.WeChat.Model;
-using Newtonsoft.Json;
+
 
 namespace Dos.WeChat
 {

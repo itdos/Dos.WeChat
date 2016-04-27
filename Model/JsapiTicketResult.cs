@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
+using System.Text;using Dos.Common;
+using Dos.Common;
+
 
 namespace Dos.WeChat
 {
@@ -14,12 +15,12 @@ namespace Dos.WeChat
         /// <summary>
         /// 凭证有效时间，单位：秒
         /// </summary>
-        [JsonProperty(PropertyName = "expires_in")]
+        [JsonProp(PropertyName = "expires_in")]
         public int ExpiresIn { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "ticket")]
+        [JsonProp(PropertyName = "ticket")]
         public string Ticket { get; set; }
     }
 }

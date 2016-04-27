@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
+using System.Text;using Dos.Common;
+using Dos.Common;
+
 
 namespace Dos.WeChat
 {
@@ -14,7 +15,7 @@ namespace Dos.WeChat
         /// <summary>
         /// 菜单按钮数组
         /// </summary>
-        [JsonProperty(PropertyName = "button")]
+        [JsonProp(PropertyName = "button")]
         public List<Item> Button { get; set; }
     }
     /// <summary>
@@ -33,29 +34,29 @@ namespace Dos.WeChat
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "key")]
+        [JsonProp(PropertyName = "key")]
         public string Key { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "name")]
+        [JsonProp(PropertyName = "name")]
         public string Name { get; set; }
 
         /// <summary>
         /// 类型。从常量中获取
         /// </summary>
-        [JsonProperty(PropertyName = "type")]
+        [JsonProp(PropertyName = "type")]
         public string Type { get; set; }
 
         /// <summary>
         /// view Button 的url地址
         /// </summary>
-        [JsonProperty(PropertyName = "url")]
+        [JsonProp(PropertyName = "url")]
         public string Url { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        [JsonProperty(PropertyName = "sub_button")]
+        [JsonProp(PropertyName = "sub_button")]
         public List<Item> SubButton { get; set; }
 
         /// <summary>

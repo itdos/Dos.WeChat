@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
+using System.Text;using Dos.Common;
 using System.Web.Caching;
 using Dos.Common;
 using Dos.WeChat.Common;

@@ -16,7 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Text;using Dos.Common;
 using Dos.WeChat.Model;
 
 namespace Dos.WeChat

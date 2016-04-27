@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Text;using Dos.Common;
 using Dos.Common;
 using Dos.WeChat.Common;
-using Newtonsoft.Json;
+
 
 namespace Dos.WeChat
 {
@@ -167,7 +167,7 @@ namespace Dos.WeChat
                     component_access_token = token.ComponentAccessToken
                 }
             });
-            var result = JsonConvert.DeserializeObject<GetAuthorizerInfoResult>(str);
+            var result = JSON.ToObject<GetAuthorizerInfoResult>(str);
             if (!result.IsSuccess)
             {
                 LogHelper.Debug("GetAuthorizerInfo失败！" + result.ErrMsg, "微信_Fail_");

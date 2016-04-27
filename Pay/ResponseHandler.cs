@@ -28,7 +28,7 @@ using System.Collections.Specialized;
 using System.Web;
 using System.Web.Configuration;
 using System.Xml;
-using System.Text;
+using System.Text;using Dos.Common;
 using Dos.Common;
 
 namespace Dos.WeChat

@@ -18,7 +18,7 @@ using System.Web.UI.WebControls;
 using Dos.Common;
 using Dos.WeChat.Common;
 using Dos.WeChat.Model;
-using Newtonsoft.Json;
+
 
 namespace Dos.WeChat
 {
@@ -56,13 +56,21 @@ namespace Dos.WeChat
             {
                 Url = ApiList.MenuCreateUrl,
                 PostParam =
-                JsonConvert.SerializeObject(param.Menu, new JsonSerializerSettings
+                JSON.ToNiceJSON(param.Menu,new JSONParameters()
                 {
-                    NullValueHandling = NullValueHandling.Ignore
-                }),
+                    SerializeNullValues = false,
+                    UseEscapedUnicode = false
+                }),//, new JsonSerializerSettings{NullValueHandling = ullValueHandling.Ignore}
                 GetParam = "access_token=" + token
             });
             return r;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public class menuObj
+        {
+            public MenuResult menu { get; set; }
         }
 
         /// <summary>
@@ -72,7 +80,7 @@ namespace Dos.WeChat
         /// <returns></returns>
         public static MenuResult Get(WeChatParam param = null)
         {
-            var menuObj = new { menu = new MenuResult() };
+            //var menuObj = new { menu = new MenuResult() };
             var httpParam = new HttpParam();
             var aToken = "";
             if (param != null && param.WeChatType == EnumHelper.WeChatType.Open)
@@ -102,11 +110,12 @@ namespace Dos.WeChat
                 aToken = bs.AccessToken;
             }
             string json = HttpHelper.Get(ApiList.MenuGetUrl, new { access_token = aToken });
-            var or = JsonConvert.DeserializeAnonymousType(json, menuObj);
+            //var or = JsonConvert.DeserializeAnonymousType(json, menuObj);
+            var or = JSON.ToObject<menuObj>(json);//, menuObj
             var result = or.menu;
             if (result == null)
             {
-                var retTemp = JsonConvert.DeserializeObject<MenuResult>(json);
+                var retTemp = JSON.ToObject<MenuResult>(json);
                 return retTemp;
             }
             return result;
