@@ -134,7 +134,7 @@ namespace Dos.WeChat
             {
                 result = HttpHelper.Get<JsapiTicketResult>(ApiList.GetticketUrl, new
                     {
-                        access_token = GetAccessToken(),
+                        access_token = GetAccessToken().AccessToken,
                         type = "jsapi"
                     });
 
