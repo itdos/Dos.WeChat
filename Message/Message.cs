@@ -141,7 +141,7 @@ namespace Dos.WeChat
                 Url = ApiList.MessageTemplateSendUrl,
                 PostParam =
                 param,
-                GetParam = "access_token=" + TokenHelper.GetAccessToken()
+                GetParam = "access_token=" + TokenHelper.GetAccessToken().AccessToken
             });
             return result;
         }
